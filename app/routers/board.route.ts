@@ -1,13 +1,22 @@
 import express, { Request, Response } from "express";
+import { boardController } from "..//controllers/index.controller";
 
 export const router = express.Router({
   strict: true,
 });
 
-router.get("/create", (req: Request, res: Response): void => {
-  res.status(200).send("GET CREATE BOARD");
+router.get("/", (req: Request, res: Response): void => {
+  boardController.read(req, res);
 });
 
 router.post("/create", (req: Request, res: Response): void => {
-  res.status(200).send("POST CREATE BOARD");
+  boardController.create(req, res);
+});
+
+router.put("/edit", (req: Request, res: Response): void => {
+  boardController.update(req, res);
+});
+
+router.delete("/delete", (req: Request, res: Response): void => {
+  boardController.delete(req, res);
 });

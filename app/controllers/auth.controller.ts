@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import db from "../database/db";
 import { CrudController } from "./crud.controller";
 
 export class AuthController extends CrudController {

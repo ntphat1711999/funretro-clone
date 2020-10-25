@@ -1,6 +1,7 @@
 import { Express, Request, Response } from "express";
 import express from "express";
 import path from "path";
+import cors from "cors";
 import bodyParser from "body-parser";
 import { authRoute, boardRoute } from "./routers/index.route";
 
@@ -10,6 +11,7 @@ export class Server {
   constructor(app: Express) {
     this.app = app;
 
+    this.app.use(cors());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -19,7 +21,7 @@ export class Server {
       res.send("You have reached the API!");
     });
     this.app.use("/api/auth", authRoute);
-    this.app.use("/api/board", boardRoute);
+    this.app.use("/api/boards", boardRoute);
 
     this.app.get("*", (req: Request, res: Response): void => {
       res.sendFile(path.resolve("./") + "/build/frontend/index.html");

@@ -5,7 +5,7 @@ CREATE TABLE board (
   owner varchar NOT NULL
 );
 
-CREATE TABLE user (
+CREATE TABLE account (
   id SERIAL PRIMARY KEY,
   email varchar UNIQUE NOT NULL ,
   password varchar NOT NULL,
@@ -18,4 +18,4 @@ CREATE TABLE card (
   content varchar,
   category varchar NOT NULL,
   owner varchar NOT NULL
-)
+);

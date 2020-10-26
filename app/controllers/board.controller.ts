@@ -19,7 +19,6 @@ export class BoardController extends CrudController {
       });
     } catch (err) {
       res.status(500).send(err);
-      throw new Error(err);
     }
   }
   public update(req: Request, res: Response): void {

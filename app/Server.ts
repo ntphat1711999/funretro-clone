@@ -3,6 +3,7 @@ import express from "express";
 import path from "path";
 import cors from "cors";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
 import { authRoute, boardRoute } from "./routers/index.route";
 
 export class Server {
@@ -11,6 +12,7 @@ export class Server {
   constructor(app: Express) {
     this.app = app;
 
+    dotenv.config();
     this.app.use(cors());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));

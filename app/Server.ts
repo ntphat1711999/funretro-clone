@@ -17,7 +17,7 @@ export class Server {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
-    this.app.use(express.static(path.resolve("./") + "/build/frontend"));
+    this.app.use(express.static(path.join(__dirname, "/build/frontend")));
 
     this.app.get("/api", (req: Request, res: Response): void => {
       res.send("You have reached the API!");
@@ -26,7 +26,7 @@ export class Server {
     this.app.use("/api/boards", boardRoute);
 
     this.app.get("*", (req: Request, res: Response): void => {
-      res.sendFile(path.resolve("./") + "/build/frontend/index.html");
+      res.sendFile(path.join(__dirname, "/build/frontend/index.html"));
     });
   }
 

@@ -31,6 +31,6 @@ export class Server {
   }
 
   public start(port: number): void {
-    this.app.listen(port, () => console.log(`Server listening on: http://localhost:${port}`));
+    this.app.listen(process.env.PORT || port, () => console.log(`Server listening on: http://localhost:${port}`));
   }
 }

@@ -12,12 +12,14 @@ export class Server {
   constructor(app: Express) {
     this.app = app;
 
+    const pathProduction = path.resolve("../") + "/build/frontend";
+    const pathDev = path.resolve("./") + "/build/frontend";
     dotenv.config();
     this.app.use(cors());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
-    this.app.use(express.static(path.resolve("../") + "/build/frontend"));
+    this.app.use(express.static(process.env.NODE_ENV === "production" ? pathProduction : pathDev));
 
     this.app.get("/api", (req: Request, res: Response): void => {
       res.send("You have reached the API!");
@@ -26,7 +28,7 @@ export class Server {
     this.app.use("/api/boards", boardRoute);
 
     this.app.get("*", (req: Request, res: Response): void => {
-      res.sendFile(path.resolve("../") + "/build/frontend/index.html");
+      res.sendFile(path.resolve("./") + "/build/frontend/index.html");
     });
   }
 

@@ -12,7 +12,7 @@ export class Server {
   constructor(app: Express) {
     this.app = app;
 
-    const pathProduction = path.resolve("../") + "/build/frontend";
+    const pathProduction = path.resolve("../") + "/frontend/build";
     const pathDev = path.resolve("./") + "/build/frontend";
     dotenv.config();
     this.app.use(cors());
@@ -28,7 +28,7 @@ export class Server {
     this.app.use("/api/boards", boardRoute);
 
     this.app.get("*", (req: Request, res: Response): void => {
-      res.sendFile("/app/build/frontend/index.html");
+      res.sendFile("../frontend/build/index.html");
     });
   }
 

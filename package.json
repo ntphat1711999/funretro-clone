@@ -11,7 +11,6 @@
     "start": "npx ts-node index.ts",
     "dev": "nodemon --watch '**/*.ts' --exec 'ts-node' index.ts",
     "build": "npx tsc",
-    "heroku-prebuild": "mkdir build",
     "heroku-postbuild": "cd frontend && yarn && yarn run build"
   },
   "dependencies": {

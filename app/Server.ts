@@ -12,7 +12,7 @@ export class Server {
   constructor(app: Express) {
     this.app = app;
 
-    const pathProduction = path.join(__dirname, "/frontend/build");
+    const pathProduction = path.resolve("./") + "/frontend/build";
     console.log(pathProduction);
     const pathDev = path.resolve("./") + "/build/frontend";
     dotenv.config();
@@ -29,7 +29,7 @@ export class Server {
     this.app.use("/api/boards", boardRoute);
 
     this.app.get("*", (req: Request, res: Response): void => {
-      res.sendFile(path.join(__dirname, "/frontend/build/index.html"));
+      res.sendFile(path.resolve("./") + "/frontend/build/index.html");
     });
   }
 

@@ -28,7 +28,7 @@ export class Server {
     this.app.use("/api/boards", boardRoute);
 
     this.app.get("*", (req: Request, res: Response): void => {
-      res.sendFile(path.join(__dirname + "../build/frontend/index.html"));
+      res.sendFile("/app/build/frontend/index.html");
     });
   }
 

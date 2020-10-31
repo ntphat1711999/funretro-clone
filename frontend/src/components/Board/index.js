@@ -4,6 +4,7 @@ import { Add as AddIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import BoardCell from "./BoardCell";
 import { boardApi } from "../../services";
+import BoardAddBtn from "./BoardAddBtn";
 
 function Board() {
   const classes = useStyles();
@@ -24,16 +25,7 @@ function Board() {
         Public board
       </Typography>
       <Grid container justify="left" spacing={5}>
-        <Grid key="add-board-button" item>
-          <Card className={classes.AddBoardBtn}>
-            <Fab color="secondary">
-              <AddIcon />
-            </Fab>
-            <Typography variant="subtitle2" color="secondary" style={{ marginTop: 10 }}>
-              Add board
-            </Typography>
-          </Card>
-        </Grid>
+        <BoardAddBtn />
         {boards.map((value, i) => (
           <BoardCell key={i} value={value} />
         ))}
@@ -65,16 +57,5 @@ const useStyles = makeStyles({
   },
   pos: {
     marginBottom: 12,
-  },
-  AddBoardBtn: {
-    cursor: "pointer",
-    padding: "20px 40px",
-    background: "transparent",
-    border: "2px #ccc dashed",
-    boxShadow: "none",
-    textAlign: "center",
-    "&:hover": {
-      border: "2px #C51162 dashed",
-    },
   },
 });

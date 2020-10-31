@@ -6,6 +6,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import ShareIcon from "@material-ui/icons/Share";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 function BoardCell(props) {
   const { value } = props;
@@ -14,33 +15,35 @@ function BoardCell(props) {
   return (
     <Grid item>
       <Card className={classes.boardCell}>
-        <CardContent>
-          <Typography variant="h5" component="h2">
-            {value.name}
-          </Typography>
-        </CardContent>
-        <CardContent style={{ paddingTop: 0 }}>
-          <Typography variant="body2" color="textSecondary" component="span">
-            <AccessAlarmsIcon style={{ fontSize: ".9rem" }} />
-            {moment(value.date).format("MMM-DD")}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="span" style={{ float: "right" }}>
-            8 cards
-          </Typography>
-        </CardContent>
-        <CardContent className={classes.boardSmall}>
-          <ul>
-            <Tooltip title="Went Well">
-              <li className={classes.cardWentWell}></li>
-            </Tooltip>
-            <Tooltip title="To Improve">
-              <li className={classes.cardToImprove}></li>
-            </Tooltip>
-            <Tooltip title="Action Items">
-              <li className={classes.cardActionItems}></li>
-            </Tooltip>
-          </ul>
-        </CardContent>
+        <Link to={(location) => `${location.pathname}/${value.id}`} style={{ textDecoration: "none" }}>
+          <CardContent>
+            <Typography variant="h5" component="h2" style={{ color: "black" }}>
+              {value.name}
+            </Typography>
+          </CardContent>
+          <CardContent style={{ paddingTop: 0 }}>
+            <Typography variant="body2" color="textSecondary" component="span">
+              <AccessAlarmsIcon style={{ fontSize: ".9rem" }} />
+              {moment(value.date).format("MMM-DD")}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="span" style={{ float: "right" }}>
+              8 cards
+            </Typography>
+          </CardContent>
+          <CardContent className={classes.boardSmall}>
+            <ul>
+              <Tooltip title="Went Well">
+                <li className={classes.cardWentWell}></li>
+              </Tooltip>
+              <Tooltip title="To Improve">
+                <li className={classes.cardToImprove}></li>
+              </Tooltip>
+              <Tooltip title="Action Items">
+                <li className={classes.cardActionItems}></li>
+              </Tooltip>
+            </ul>
+          </CardContent>
+        </Link>
         <CardActions className={classes.boardAction}>
           <Tooltip title="Edit name of board">
             <IconButton size="small" className={classes.editIcon}>
@@ -72,7 +75,7 @@ const useStyles = makeStyles({
     padding: 0,
     minWidth: 220,
     background: "white",
-    boxShadow: "0 2px 4px 0 rgba(192,208,230,0.5)",
+    boxShadow: "0 4px 8px 0 rgba(192,208,230,0.5)",
     "&:hover": {
       boxShadow: "0 6px 10px rgba(0, 0, 0, 0.19) ",
     },

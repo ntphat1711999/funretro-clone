@@ -4,6 +4,8 @@ import path from "path";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
+import passport from "passport";
+import { applyPassportStrategy } from "./passport/passport";
 import { authRoute, boardRoute } from "./routers/index.route";
 
 export class Server {
@@ -13,7 +15,12 @@ export class Server {
     this.app = app;
 
     dotenv.config();
+
+    applyPassportStrategy(passport);
+    // use the strategy
     this.app.use(cors());
+
+    this.app.use(passport.initialize());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,6 +30,8 @@ export class Server {
       res.send("You have reached the API!");
     });
     this.app.use("/api/auth", authRoute);
+    // this.app.use("/api/boards", passport.authenticate("jwt", { session: false }), boardRoute);
+
     this.app.use("/api/boards", boardRoute);
 
     this.app.get("*", (req: Request, res: Response): void => {

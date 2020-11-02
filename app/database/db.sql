@@ -1,7 +1,8 @@
 CREATE TABLE board (
   id SERIAL PRIMARY KEY,
   name varchar NOT NULL,
-  date varchar,
+  date varchar NOT NULL,
+  permission varchar NOT NULL,
   owner varchar NOT NULL
 );
 
@@ -17,5 +18,9 @@ CREATE TABLE card (
   board_id INT NOT NULL,
   content varchar,
   category varchar NOT NULL,
-  owner varchar NOT NULL
+  owner varchar NOT NULL,
+  CONSTRAINT fk_card
+    FOREIGN KEY (board_id)
+      REFERENCES board(id) 
+      ON DELETE CASCADE
 );

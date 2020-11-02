@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { boardController } from "..//controllers/index.controller";
+import { boardController } from "../controllers/index.controller";
 
 export const router = express.Router({
   strict: true,

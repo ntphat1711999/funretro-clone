@@ -1,42 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, makeStyles, TextField, Typography, Button, Dialog, DialogContent } from "@material-ui/core";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { authApi } from "../../services";
+
+function validateEmail(email) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 
 function Signin() {
   const classes = useStyles();
+  const history = useHistory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSignin = () => {};
+  const submitSignin = async (data) => {
+    try {
+      const response = await authApi.signin(data);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSignin = () => {
+    if (!validateEmail(email)) {
+      console.log("Invalid Email");
+      return;
+    }
+    const response = submitSignin({ email, password });
+    console.log(response);
+    // localStorage.setItem("user", JSON.stringify(response.user));
+    // localStorage.setItem("token", JSON.stringify(response.token));
+    history.push("/");
+  };
 
   return (
     <div>
       <Grid container style={{ minHeight: "100vh" }}>
         <Grid item xs={12}>
-          <img src="https://source.unsplash.com/random" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img
+            src="https://source.unsplash.com/random"
+            alt="background"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
         </Grid>
-        <Dialog open={true} onClose={false} classes={classes.root} maxWidth="lg">
+        <Dialog open={true} onClose={() => false} maxWidth="lg">
           <DialogContent>
             <Grid container direction="column" alignItems="center" className={classes.form}>
               <Typography variant="h3" color="initial">
                 Sign in
               </Typography>
               <TextField
-                id="outlined-secondary"
+                id="email"
+                autoComplete="email"
                 fullWidth
                 margin="normal"
                 required
                 label="Email"
                 variant="outlined"
+                onChange={(e) => setEmail(e.target.value)}
                 className={classes.textFiled}
               />
               <TextField
-                id="outlined-secondary"
+                id="password"
+                autoComplete="password"
                 fullWidth
                 margin="normal"
                 required
                 label="Password"
                 variant="outlined"
                 type="password"
+                onChange={(e) => setPassword(e.target.value)}
                 className={classes.textFiled}
               />
               <Button onClick={handleSignin} variant="contained" color="primary" style={{ width: "50%" }}>
@@ -69,7 +105,7 @@ function Signin() {
               </Button>
               <Grid container>
                 <Grid item xs style={{ marginRight: 10 }}>
-                  <Link href="#" variant="body2">
+                  <Link to="#" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>

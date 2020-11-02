@@ -1,10 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, makeStyles, TextField, Typography, Button, Dialog, DialogContent } from "@material-ui/core";
 import FacebookIcon from "@material-ui/icons/Facebook";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { authApi } from "../../services";
+
+function validateEmail(email) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 
 function Signup() {
   const classes = useStyles();
+  const history = useHistory();
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submitSignup = async (data) => {
+    try {
+      await authApi.signup(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSignup = () => {
+    if (!validateEmail(email)) {
+      console.log("INVALID EMAIL");
+      return;
+    }
+    const name = fname.trim() + " " + lname.trim();
+    const response = submitSignup({ name, email, password });
+    console.log(response);
+    history.push("/signin");
+  };
 
   const handleSignin = () => {};
 
@@ -12,9 +42,13 @@ function Signup() {
     <div>
       <Grid container style={{ minHeight: "100vh" }}>
         <Grid item xs={12}>
-          <img src="https://source.unsplash.com/random" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img
+            src="https://source.unsplash.com/random"
+            alt="background"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
         </Grid>
-        <Dialog open={true} onClose={false} classes={classes.root} maxWidth="lg">
+        <Dialog open={true} onClose={() => false} maxWidth="lg">
           <DialogContent>
             <Grid container direction="column" alignItems="center" className={classes.form}>
               <Typography variant="h3" color="initial">
@@ -30,6 +64,7 @@ function Signup() {
                     fullWidth
                     id="fName"
                     label="First Name"
+                    onChange={(e) => setFname(e.target.value)}
                     autoFocus
                     style={{ width: 170 }}
                   />
@@ -43,30 +78,35 @@ function Signup() {
                     label="Last Name"
                     name="lname"
                     autoComplete="lname"
+                    onChange={(e) => setLname(e.target.value)}
                     style={{ width: 170, marginLeft: 10 }}
                   />
                 </Grid>
               </Grid>
               <TextField
-                id="outlined-secondary"
+                id="email"
+                autoComplete="email"
                 fullWidth
                 margin="normal"
                 required
                 label="Email"
                 variant="outlined"
+                onChange={(e) => setEmail(e.target.value)}
                 className={classes.textFiled}
               />
               <TextField
-                id="outlined-secondary"
+                id="password"
+                autoComplete="password"
                 fullWidth
                 margin="normal"
                 required
                 label="Password"
                 variant="outlined"
                 type="password"
+                onChange={(e) => setPassword(e.target.value)}
                 className={classes.textFiled}
               />
-              <Button onClick={handleSignin} variant="contained" color="primary" style={{ width: "50%" }}>
+              <Button onClick={handleSignup} variant="contained" color="primary" style={{ width: "50%" }}>
                 Sign up
               </Button>
               <Button
@@ -96,7 +136,7 @@ function Signup() {
               </Button>
               <Grid container justify="flex-end">
                 <Grid item>
-                  <Link to="/" variant="body2">
+                  <Link to="/signin" variant="body2">
                     Already have an account? Sign in
                   </Link>
                 </Grid>
@@ -112,7 +152,7 @@ function Signup() {
 export default Signup;
 
 const useStyles = makeStyles({
-  root: {
+  dialogForm: {
     width: 600,
     height: "auto",
   },

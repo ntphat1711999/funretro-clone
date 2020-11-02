@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Fab, Card, Typography } from "@material-ui/core";
-import { Add as AddIcon } from "@material-ui/icons";
+import { Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import BoardCell from "./BoardCell";
 import { boardApi } from "../../services";

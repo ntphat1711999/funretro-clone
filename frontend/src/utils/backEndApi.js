@@ -3,7 +3,7 @@ import axios from "axios";
 
 const createAxios = () =>
   axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: "",
     timeout: 20000,
     headers: {
       Accept: "application/json",

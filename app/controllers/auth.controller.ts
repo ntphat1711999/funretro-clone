@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 
 export class AuthController extends CrudController {
   public create(req: Request, res: Response): void {
-
+    try {
       const { email, password, name } = req.body;
       if (!email || !password || !name) res.status(500).send("Please fill all fields !!!");
       bcrypt.hash(password, 10).then((hashedPassword) => {
@@ -19,8 +19,10 @@ export class AuthController extends CrudController {
             return;
           }
           res.status(200).json(result.rows);
+          return;
         });
-      }).catch(err) {
+      });
+    } catch (err) {
       res.status(500).send(err);
       return;
     }

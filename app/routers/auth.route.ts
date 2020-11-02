@@ -14,7 +14,7 @@ router.post("/signup", (req: Request, res: Response): void => {
   authController.create(req, res);
 });
 
-router.put("/update", (req: Request, res: Response): void => {
+router.put("/update", passport.authenticate("jwt", { session: false }), (req: Request, res: Response): void => {
   authController.update(req, res);
 });
 

@@ -4,20 +4,17 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import Popper from "@material-ui/core/Popper";
 import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
 import MenuList from "@material-ui/core/MenuList";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Link } from "@material-ui/core";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { actions } from "../redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,8 +41,11 @@ const useStyles = makeStyles((theme) => ({
 
 function Header() {
   const classes = useStyles();
+  const history = useHistory();
+  const user = useSelector((state) => state.app.user);
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
+  const dispatch = useDispatch();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -69,6 +69,12 @@ function Header() {
     prevOpen.current = open;
   }, [open]);
 
+  const handleSignout = () => {
+    localStorage.clear();
+    dispatch(actions.signout());
+    history.push("/signin");
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -81,6 +87,10 @@ function Header() {
           <div>
             <IconButton ref={anchorRef} onClick={handleToggle} color="inherit">
               <AccountCircle />
+
+              <Typography variant="subtitle2" color="initial">
+                {user.name}
+              </Typography>
             </IconButton>
             <Popper open={open} anchorEl={anchorRef.current} placement="bottom-end" transition>
               {({ TransitionProps }) => (
@@ -88,9 +98,9 @@ function Header() {
                   <Paper>
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList autoFocusItem={open} id="menu-list-grow">
-                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                        <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        <MenuItem onClick={() => history.push("/profile")}>Profile</MenuItem>
+                        <MenuItem onClick={() => history.push("/changepassword")}>Change password</MenuItem>
+                        <MenuItem onClick={handleSignout}>Signout</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>

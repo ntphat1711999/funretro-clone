@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -12,13 +12,19 @@ import { Add as AddIcon } from "@material-ui/icons";
 
 export default function BoardAddBtn(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleAddBoard = () => {
+    console.log(name);
     setOpen(false);
   };
 
@@ -35,14 +41,19 @@ export default function BoardAddBtn(props) {
       <Dialog open={open} onClose={handleClose} maxWidth="xl">
         <DialogTitle id="form-dialog-title">Add new board</DialogTitle>
         <DialogContent>
-          <TextField autoFocus id="name" label="Name" type="text" fullWidth variant="outlined" />
+          <TextField
+            autoFocus
+            id="name"
+            label="Name"
+            type="text"
+            fullWidth
+            variant="outlined"
+            onChange={(e) => setName(e.target.value)}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" variant="contained">
+          <Button onClick={handleAddBoard} color="primary" variant="contained">
             Add
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Cancel
           </Button>
         </DialogActions>
       </Dialog>

@@ -3,6 +3,8 @@ import { Grid, makeStyles, TextField, Typography, Button, Dialog, DialogContent 
 import FacebookIcon from "@material-ui/icons/Facebook";
 import { Link, useHistory } from "react-router-dom";
 import { authApi } from "../../services";
+import { useDispatch } from "react-redux";
+import { actions } from "../../redux";
 
 function validateEmail(email) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -14,13 +16,19 @@ function Signin() {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   const submitSignin = async (data) => {
     try {
       const response = await authApi.signin(data);
-      return response;
+      const { user, token } = response;
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", JSON.stringify(token));
+      dispatch(actions.signin({ user, token }));
+      history.push("/");
     } catch (error) {
       console.log(error);
+      history.push("/signin");
     }
   };
 
@@ -29,11 +37,7 @@ function Signin() {
       console.log("Invalid Email");
       return;
     }
-    const response = submitSignin({ email, password });
-    console.log(response);
-    // localStorage.setItem("user", JSON.stringify(response.user));
-    // localStorage.setItem("token", JSON.stringify(response.token));
-    history.push("/");
+    submitSignin({ email, password });
   };
 
   return (

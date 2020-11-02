@@ -20,8 +20,10 @@ function Signup() {
   const submitSignup = async (data) => {
     try {
       await authApi.signup(data);
+      history.push("/signin");
     } catch (error) {
       console.log(error);
+      history.push("/signup");
     }
   };
 
@@ -31,9 +33,7 @@ function Signup() {
       return;
     }
     const name = fname.trim() + " " + lname.trim();
-    const response = submitSignup({ name, email, password });
-    console.log(response);
-    history.push("/signin");
+    submitSignup({ name, email, password });
   };
 
   const handleSignin = () => {};

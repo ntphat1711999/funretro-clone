@@ -14,8 +14,13 @@ function Board() {
     setBoards(boards);
   };
 
+  const getAllData = async () => {
+    await fetchData();
+  };
+
   useEffect(() => {
-    fetchData();
+    getAllData();
+    return () => setBoards([]);
   }, []);
 
   return (
@@ -23,7 +28,7 @@ function Board() {
       <Typography variant="h5" className={classes.header}>
         Public board
       </Typography>
-      <Grid container justify="left" spacing={5}>
+      <Grid container spacing={5}>
         <BoardAddBtn />
         {boards.map((value, i) => (
           <BoardCell key={i} value={value} />

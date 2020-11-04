@@ -5,15 +5,20 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { Grid, Fab, Card, Typography } from "@material-ui/core";
 import { Add as AddIcon } from "@material-ui/icons";
+import { boardApi } from "../../services";
+import moment from "moment";
+import { useDispatch } from "react-redux";
+import { actions } from "../../redux";
+import { makeRandomId } from "../../utils/common";
 
 export default function BoardAddBtn(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
+  const dispatch = useDispatch();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -23,8 +28,21 @@ export default function BoardAddBtn(props) {
     setOpen(false);
   };
 
+  const submitAddBoard = async (data) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+      await boardApi.addBoard(data, token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleAddBoard = () => {
-    console.log(name);
+    const date = moment();
+    const board_id = makeRandomId();
+    const board = { board_id, name, date, permission: "private", owner: props.owner };
+    submitAddBoard(board);
+    dispatch(actions.addBoard({ board }));
     setOpen(false);
   };
 

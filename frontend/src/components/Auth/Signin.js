@@ -5,17 +5,15 @@ import { Link, useHistory } from "react-router-dom";
 import { authApi } from "../../services";
 import { useDispatch } from "react-redux";
 import { actions } from "../../redux";
-
-function validateEmail(email) {
-  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-}
+import { validateEmail } from "../../utils/common";
+import CustomizedSnackbars from "../common/CustomizedSnackbars";
 
 function Signin() {
   const classes = useStyles();
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
 
   const submitSignin = async (data) => {
@@ -25,16 +23,18 @@ function Signin() {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", JSON.stringify(token));
       dispatch(actions.signin({ user, token }));
+      setMessage({ type: "success", content: "Sign in successfully !!!", open: true });
       history.push("/");
     } catch (error) {
       console.log(error);
+      setMessage({ type: "error", content: "Email or Password is wrong !!!", open: true });
       history.push("/signin");
     }
   };
 
   const handleSignin = () => {
     if (!validateEmail(email)) {
-      console.log("Invalid Email");
+      setMessage({ type: "error", content: "Invalid email !!!", open: true });
       return;
     }
     submitSignin({ email, password });
@@ -123,6 +123,7 @@ function Signin() {
           </DialogContent>
         </Dialog>
       </Grid>
+      <CustomizedSnackbars message={message} />
     </div>
   );
 }

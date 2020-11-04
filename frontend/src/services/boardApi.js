@@ -1,8 +1,8 @@
 import { backEndApi } from "../utils";
 
 export default {
-  getBoards: (owner, token) =>
-    backEndApi.get(`/api/boards?owner=${owner}`, {
+  getBoards: (token) =>
+    backEndApi.get(`/api/boards`, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -20,7 +20,13 @@ export default {
       },
     }),
   deleteBoard: (data, token) =>
-    backEndApi.delete(`api/boards/delete`, data, {
+    backEndApi.delete(`api/boards/delete?board_id=${data.board_id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }),
+  shareBoard: (data, token) =>
+    backEndApi.put(`api/boards/share`, data, {
       headers: {
         Authorization: "Bearer " + token,
       },

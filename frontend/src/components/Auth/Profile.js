@@ -31,9 +31,9 @@ function Profile() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user.name) {
-      setFirstName(user.name.split(" ")[0]);
-      setLastName(user.name.split(" ")[1]);
+    if (user) {
+      setFirstName(user.first_name);
+      setLastName(user.last_name);
     }
   }, [user]);
 
@@ -46,10 +46,11 @@ function Profile() {
   };
 
   const handleChangeProfile = () => {
-    const newName = firstName.trim() + " " + lastName.trim();
-    const data = { id: user.id, newName };
-    dispatch(actions.updateProfile({ name: newName }));
-    localStorage.setItem("user", JSON.stringify({ ...user, name: newName }));
+    const newFirstName = firstName.trim();
+    const newLastName = lastName.trim();
+    const data = { id: user.id, first_name: newFirstName, last_name: newLastName };
+    dispatch(actions.updateProfile({ first_name: newFirstName, last_name: newLastName }));
+    localStorage.setItem("user", JSON.stringify({ ...user, first_name: newFirstName, last_name: newLastName }));
     submitChangeProfile(data, token);
   };
 

@@ -3,11 +3,8 @@ import { Grid, makeStyles, TextField, Typography, Button, Dialog, DialogContent 
 import FacebookIcon from "@material-ui/icons/Facebook";
 import { Link, useHistory } from "react-router-dom";
 import { authApi } from "../../services";
-
-function validateEmail(email) {
-  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-}
+import { validateEmail } from "../../utils/common";
+import CustomizedSnackbars from "../common/CustomizedSnackbars";
 
 function Signup() {
   const classes = useStyles();
@@ -16,24 +13,26 @@ function Signup() {
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState(null);
 
   const submitSignup = async (data) => {
     try {
       await authApi.signup(data);
+      setMessage({ type: "success", content: "Sign up successfully !!!", open: true });
       history.push("/signin");
     } catch (error) {
       console.log(error);
+      setMessage({ type: "error", content: "Email is invalid !!!", open: true });
       history.push("/signup");
     }
   };
 
   const handleSignup = () => {
     if (!validateEmail(email)) {
-      console.log("INVALID EMAIL");
+      setMessage({ type: "error", content: "Email is invalid !!!", open: true });
       return;
     }
-    const name = fname.trim() + " " + lname.trim();
-    submitSignup({ name, email, password });
+    submitSignup({ first_name: fname.trim(), last_name: lname.trim(), email, password });
   };
 
   const handleSignin = () => {};
@@ -145,6 +144,7 @@ function Signup() {
           </DialogContent>
         </Dialog>
       </Grid>
+      <CustomizedSnackbars message={message} />
     </div>
   );
 }

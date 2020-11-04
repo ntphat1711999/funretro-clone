@@ -1,40 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Divider, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import BoardCell from "./BoardCell";
-import { boardApi } from "../../services";
+import { boardApi, cardApi } from "../../services";
 import BoardAddBtn from "./BoardAddBtn";
+import { useDispatch, useSelector } from "react-redux";
+import { actions } from "../../redux";
 
 function Board() {
   const classes = useStyles();
-  const [boards, setBoards] = useState([]);
-
-  const fetchData = async () => {
-    const boards = await boardApi.getBoards();
-    setBoards(boards);
-  };
-
-  const getAllData = async () => {
-    await fetchData();
-  };
+  const boards = useSelector((state) => state.app.boards);
+  const user = useSelector((state) => state.app.user);
+  const [privateBoards, setPrivateBoards] = useState([]);
+  const [publicBoards, setPublicBoards] = useState([]);
+  const [myBoards, setMyBoards] = useState([]);
 
   useEffect(() => {
-    getAllData();
-    return () => setBoards([]);
-  }, []);
+    setMyBoards(boards.filter((b) => b.owner === user.email));
+  }, [boards, user]);
+
+  useEffect(() => {
+    setPrivateBoards(myBoards.filter((b) => b.permission === "private"));
+    setPublicBoards(myBoards.filter((b) => b.permission === "public"));
+  }, [myBoards]);
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h5" className={classes.header}>
-        Public board
-      </Typography>
-      <Grid container spacing={5}>
-        <BoardAddBtn />
-        {boards.map((value, i) => (
-          <BoardCell key={i} value={value} />
-        ))}
+    <Grid container direction="column" className={classes.root}>
+      <Grid item>
+        <Typography variant="h5" className={classes.header}>
+          Private board
+        </Typography>
+        <Grid container spacing={5}>
+          <BoardAddBtn owner={user.email} />
+          {privateBoards.map((value, i) => (
+            <BoardCell key={i} value={value} />
+          ))}
+        </Grid>
       </Grid>
-    </div>
+      <Divider style={{ margin: "40px 0px" }} />
+      <Grid item>
+        <Typography variant="h5" className={classes.header}>
+          Public board
+        </Typography>
+        <Grid container spacing={5}>
+          {publicBoards.map((value, i) => (
+            <BoardCell key={i} value={value} />
+          ))}
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 

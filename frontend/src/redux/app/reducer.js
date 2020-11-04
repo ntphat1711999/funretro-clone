@@ -24,7 +24,8 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         user: {
           ...state.user,
-          name: action.payload.name,
+          first_name: action.payload.first_name,
+          last_name: action.payload.last_name,
         },
       };
     case types.GET_ALL_NECESSARY_DATA:
@@ -32,6 +33,47 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         boards: action.payload.boards,
         cards: action.payload.cards,
+      };
+    case types.ADD_BOARD:
+      return {
+        ...state,
+        boards: [...state.boards, action.payload.board],
+      };
+    case types.UPDATE_BOARD:
+      return {
+        ...state,
+        boards: state.boards.map((board) =>
+          board.board_id === action.payload.board_id ? { ...board, name: action.payload.name } : board
+        ),
+      };
+    case types.SHARE_BOARD:
+      return {
+        ...state,
+        boards: state.boards.map((board) =>
+          board.board_id === action.payload.board_id ? { ...board, permission: "public" } : board
+        ),
+      };
+    case types.DELETE_BOARD:
+      return {
+        ...state,
+        boards: state.boards.filter((board) => board.board_id !== action.payload.board_id),
+      };
+    case types.ADD_CARD:
+      return {
+        ...state,
+        cards: [...state.cards, action.payload],
+      };
+    case types.UPDATE_CARD:
+      return {
+        ...state,
+        cards: state.cards.map((card) =>
+          card.card_id === action.payload.card_id ? { ...card, content: action.payload.content } : card
+        ),
+      };
+    case types.DELETE_CARD:
+      return {
+        ...state,
+        cards: state.cards.filter((card) => card.card_id !== action.payload.card_id),
       };
     default:
       return state;

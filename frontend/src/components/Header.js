@@ -89,7 +89,7 @@ function Header() {
               <AccountCircle />
 
               <Typography variant="subtitle2" color="initial">
-                {user.name}
+                {user.first_name + " " + user.last_name}
               </Typography>
             </IconButton>
             <Popper open={open} anchorEl={anchorRef.current} placement="bottom-end" transition>

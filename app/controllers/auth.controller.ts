@@ -7,12 +7,12 @@ import bcrypt from "bcryptjs";
 export class AuthController extends CrudController {
   public create(req: Request, res: Response): void {
     try {
-      const { email, password, name } = req.body;
-      if (!email || !password || !name) res.status(500).send("Please fill all fields !!!");
+      const { email, password, first_name, last_name } = req.body;
+      if (!email || !password || !first_name || !last_name) res.status(500).send("Please fill all fields !!!");
       bcrypt.hash(password, 10).then((hashedPassword) => {
-        const text = `INSERT INTO account (email, password, name)
-                      VALUES ($1, $2, $3)`;
-        const values = [email.trim(), hashedPassword.trim(), name.trim()];
+        const text = `INSERT INTO account (email, password, first_name, last_name)
+                      VALUES ($1, $2, $3, $4)`;
+        const values = [email, hashedPassword, first_name, last_name];
         db.query(text, values, (err, result) => {
           if (err) {
             res.status(500).send(err);
@@ -34,11 +34,12 @@ export class AuthController extends CrudController {
 
   public update(req: Request, res: Response): void {
     try {
-      const { id, newName } = req.body;
+      const { id, first_name, last_name } = req.body;
       const text = `UPDATE account
-                    SET name = $1
-                    WHERE id = $2`;
-      const values = [newName, id];
+                    SET first_name = $1,
+                        last_name = $2
+                    WHERE id = $3`;
+      const values = [first_name, last_name, id];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);

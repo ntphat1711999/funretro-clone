@@ -5,10 +5,10 @@ import db from "../database/db";
 export class BoardController extends CrudController {
   public create(req: Request, res: Response): void {
     try {
-      const { user, name, date, permission } = req.body;
-      const text = `INSERT INTO board (name, date, permission, owner)
-                    VALUES ($1, $2, $3, $4)`;
-      const values = [name, date, permission, user.email];
+      const { board_id, name, date, permission, owner } = req.body;
+      const text = `INSERT INTO board (board_id, name, date, permission, owner)
+                    VALUES ($1, $2, $3, $4, $5)`;
+      const values = [board_id, name, date, permission, owner];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);
@@ -23,10 +23,8 @@ export class BoardController extends CrudController {
   }
   public read(req: Request, res: Response): void {
     try {
-      const { owner } = req.body;
-      const text = `SELECT * FROM board
-                    WHERE owner = $1`;
-      const values = [owner];
+      const text = `SELECT * FROM board`;
+      const values = [];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);
@@ -41,11 +39,11 @@ export class BoardController extends CrudController {
   }
   public update(req: Request, res: Response): void {
     try {
-      const { name, id } = req.body;
+      const { name, board_id } = req.body;
       const text = `UPDATE board
                     SET name = $1
-                    WHERE id = $2`;
-      const values = [name, id];
+                    WHERE board_id = $2`;
+      const values = [name, board_id];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);
@@ -60,10 +58,10 @@ export class BoardController extends CrudController {
   }
   public delete(req: Request, res: Response): void {
     try {
-      const { id } = req.body;
+      const { board_id } = req.query;
       const text = `DELETE FROM board
-                    WHERE id = $1`;
-      const values = [id];
+                    WHERE board_id = $1`;
+      const values = [board_id];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);
@@ -78,11 +76,11 @@ export class BoardController extends CrudController {
   }
   public share(req: Request, res: Response): void {
     try {
-      const { id } = req.body;
+      const { board_id } = req.body;
       const text = `UPDATE board
                     SET permission = 'public'
-                    WHERE id = $1`;
-      const values = [id];
+                    WHERE board_id = $1`;
+      const values = [board_id];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);
@@ -97,11 +95,11 @@ export class BoardController extends CrudController {
   }
   public unshare(req: Request, res: Response): void {
     try {
-      const { id } = req.body;
+      const { board_id } = req.body;
       const text = `UPDATE board
                     SET permission = 'private'
-                    WHERE id = $1`;
-      const values = [id];
+                    WHERE board_id = $1`;
+      const values = [board_id];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);

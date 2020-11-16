@@ -5,10 +5,10 @@ import db from "../database/db";
 export class CardController extends CrudController {
   public create(req: Request, res: Response): void {
     try {
-      const { board_id, card_id, content, category, owner } = req.body;
-      const text = `INSERT INTO card (board_id, card_id, content, category, owner)
-                    VALUES ($1, $2, $3, $4, $5)`;
-      const values = [board_id, card_id, content, category, owner];
+      const { board_id, card_id, content, category, owner, matrix } = req.body;
+      const text = `INSERT INTO card (board_id, card_id, content, category, owner, matrix)
+                    VALUES ($1, $2, $3, $4, $5, $6)`;
+      const values = [board_id, card_id, content, category, owner, matrix];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);
@@ -39,12 +39,13 @@ export class CardController extends CrudController {
   }
   public update(req: Request, res: Response): void {
     try {
-      const { content, category, card_id } = req.body;
+      const { content, category, matrix, card_id } = req.body;
       const text = `UPDATE card
                     SET content = $1,
-                        category = $2
-                    WHERE card_id = $3`;
-      const values = [content, category, card_id];
+                        category = $2,
+                        matrix = $3
+                    WHERE card_id = $4`;
+      const values = [content, category, matrix, card_id];
       db.query(text, values, (err, result) => {
         if (err) {
           res.status(500).send(err);

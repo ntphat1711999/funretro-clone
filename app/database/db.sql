@@ -22,6 +22,7 @@ CREATE TABLE card (
   content varchar,
   category varchar NOT NULL,
   owner varchar NOT NULL,
+  matrix JSON NOT NULL,
   CONSTRAINT fk_card
     FOREIGN KEY (board_id)
       REFERENCES board(board_id) 

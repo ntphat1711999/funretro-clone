@@ -10,6 +10,10 @@ router.post("/signin", (req: Request, res: Response): void => {
   authController.signin(req, res);
 });
 
+router.post("/signinthirdparty", (req: Request, res: Response): void => {
+  authController.signinWithThirdParty(req, res);
+});
+
 router.post("/signup", (req: Request, res: Response): void => {
   authController.create(req, res);
 });

@@ -108,10 +108,54 @@ export class AuthController extends CrudController {
       });
     } catch (err) {
       res.status(500).send(err);
+      return;
     }
   }
   public signout(req: Request, res: Response): void {
     res.json({ messages: "SIGN OUT" });
     return;
+  }
+
+  public signinWithThirdParty(req: Request, res: Response): void {
+    try {
+      const { id, email, first_name, last_name } = req.body;
+      const text = `SELECT * FROM account
+                    WHERE email = $1`;
+      const values = [email];
+      db.query(text, values, (err, result) => {
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        if (result.rows.length === 0) {
+          bcrypt.hash(id, 10).then((hashedPassword) => {
+            const text = `INSERT INTO account (email, password, first_name, last_name)
+                          VALUES ($1, $2, $3, $4)`;
+            const values = [email, hashedPassword, first_name, last_name];
+            db.query(text, values, (err, result) => {
+              if (err) {
+                res.status(500).send(err);
+                return;
+              }
+              const user = {
+                email,
+                first_name,
+                last_name,
+              };
+              const token = jwt.sign({ user }, process.env.JWT_SECRET);
+              res.status(200).json({ user, token, messages: "create new account !!!" });
+            });
+          });
+        } else {
+          const user = result.rows[0];
+          delete user.password;
+          const token = jwt.sign({ user }, process.env.JWT_SECRET);
+          res.status(200).json({ user, token });
+        }
+      });
+    } catch (err) {
+      res.status(500).send(err);
+      return;
+    }
   }
 }

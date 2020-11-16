@@ -16,7 +16,7 @@ export class Server {
 
     dotenv.config();
     const pathProduction = path.resolve("./") + "/frontend/build";
-    const pathDev = path.resolve("./") + "/build/frontend";
+    const pathDev = path.resolve("./") + "/frontend/build";
 
     applyPassportStrategy(passport);
     // use the strategy

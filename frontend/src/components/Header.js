@@ -99,7 +99,7 @@ function Header() {
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList autoFocusItem={open} id="menu-list-grow">
                         <MenuItem onClick={() => history.push("/profile")}>Profile</MenuItem>
-                        <MenuItem onClick={() => history.push("/changepassword")}>Change password</MenuItem>
+                        {/* <MenuItem onClick={() => history.push("/changepassword")}>Change password</MenuItem> */}
                         <MenuItem onClick={handleSignout}>Signout</MenuItem>
                       </MenuList>
                     </ClickAwayListener>

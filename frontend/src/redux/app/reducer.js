@@ -66,9 +66,7 @@ export default (state = INITIAL_STATE, action) => {
     case types.UPDATE_CARD:
       return {
         ...state,
-        cards: state.cards.map((card) =>
-          card.card_id === action.payload.card_id ? { ...card, content: action.payload.content } : card
-        ),
+        cards: state.cards.map((card) => (card.card_id === action.payload.card_id ? { ...action.payload } : card)),
       };
     case types.DELETE_CARD:
       return {

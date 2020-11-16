@@ -6,7 +6,6 @@ import { cardApi } from "../../services";
 import { useDispatch } from "react-redux";
 import { actions } from "../../redux";
 import AlertDialog from "../common/AlertDialog";
-import CustomizedSnackbars from "../common/CustomizedSnackbars";
 
 function Card(props) {
   const classes = useStyles();
@@ -49,17 +48,6 @@ function Card(props) {
     }
   };
 
-  const submitDeleteCard = async (data) => {
-    try {
-      const token = JSON.parse(localStorage.getItem("token"));
-      await cardApi.deleteCard(data, token);
-      dispatch(actions.deleteCard(data));
-      setIsDelete(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleAddCard = () => {
     if (props.card.shouldSave) {
       const tempCard = { ...props.card, content: newContent };
@@ -73,7 +61,8 @@ function Card(props) {
   };
 
   const handleDeleteCard = () => {
-    submitDeleteCard(props.card);
+    setIsDelete(false);
+    props.onDeleteCard(props.card);
   };
 
   return (

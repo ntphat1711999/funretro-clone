@@ -217,12 +217,12 @@ const useStyles = makeStyles({
     marginTop: 10,
   },
   cardWentWell: {
-    background: "#009688",
+    background: "blue",
   },
   cardToImprove: {
-    background: "#e91e63",
+    background: "green",
   },
   cardActionItems: {
-    background: "#9c27b0",
+    background: "red",
   },
 });

@@ -11,9 +11,18 @@ function Board() {
   const classes = useStyles();
   const boards = useSelector((state) => state.app.boards);
   const user = useSelector((state) => state.app.user);
+  const token = useSelector((state) => state.app.token);
   const [privateBoards, setPrivateBoards] = useState([]);
   const [publicBoards, setPublicBoards] = useState([]);
   const [myBoards, setMyBoards] = useState([]);
+  const dispatch = useDispatch();
+
+  const fetchData = async (user, token) => {
+    const boards = await boardApi.getBoards(token);
+    const cards = await cardApi.getCards(token);
+    const data = { boards, cards };
+    dispatch(actions.getAllNecessaryData(data));
+  };
 
   useEffect(() => {
     setMyBoards(boards.filter((b) => b.owner === user.email));
@@ -23,6 +32,10 @@ function Board() {
     setPrivateBoards(myBoards.filter((b) => b.permission === "private"));
     setPublicBoards(myBoards.filter((b) => b.permission === "public"));
   }, [myBoards]);
+
+  useEffect(() => {
+    fetchData(user, token);
+  }, [token]);
 
   return (
     <Grid container direction="column" className={classes.root}>

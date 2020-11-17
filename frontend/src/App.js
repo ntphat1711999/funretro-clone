@@ -27,7 +27,7 @@ const Routing = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     const token = JSON.parse(localStorage.getItem("token"));
-    if (!user) {
+    if (!user && !token) {
       history.push("/signin");
     } else {
       fetchData(user, token);

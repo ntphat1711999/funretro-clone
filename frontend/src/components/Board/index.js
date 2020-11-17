@@ -18,6 +18,7 @@ function Board() {
   const dispatch = useDispatch();
 
   const fetchData = async (user, token) => {
+    if (token === "") return;
     const boards = await boardApi.getBoards(token);
     const cards = await cardApi.getCards(token);
     const data = { boards, cards };

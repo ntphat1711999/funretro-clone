@@ -5,6 +5,10 @@ import { Link, useHistory } from "react-router-dom";
 import { authApi } from "../../services";
 import { validateEmail } from "../../utils/common";
 import CustomizedSnackbars from "../common/CustomizedSnackbars";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+import GoogleLogin from "react-google-login";
+import { useDispatch } from "react-redux";
+import { actions } from "../../redux";
 
 function Signup() {
   const classes = useStyles();
@@ -14,6 +18,7 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
+  const dispatch = useDispatch();
 
   const submitSignup = async (data) => {
     try {
@@ -35,7 +40,28 @@ function Signup() {
     submitSignup({ first_name: fname.trim(), last_name: lname.trim(), email, password });
   };
 
-  const handleSignin = () => {};
+  const signinWithThirdParty = async (data) => {
+    const response = await authApi.signinWithThirdParty(data);
+    const { user, token } = response;
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", JSON.stringify(token));
+    dispatch(actions.signin({ user, token }));
+    setMessage({ type: "success", content: "Sign in successfully !!!", open: true });
+    history.push("/");
+  };
+
+  const responseFacebook = (response) => {
+    const { id, email, name } = response;
+    if (response.status !== "unknown") {
+      const data = { id, email, first_name: name, last_name: "" };
+      signinWithThirdParty(data);
+    }
+  };
+
+  const responseGoogle = (response) => {
+    const { googleId, email, givenName, familyName } = response.profileObj;
+    signinWithThirdParty({ id: googleId, email, first_name: givenName, last_name: familyName });
+  };
 
   return (
     <div>
@@ -108,31 +134,48 @@ function Signup() {
               <Button onClick={handleSignup} variant="contained" color="primary" style={{ width: "50%" }}>
                 Sign up
               </Button>
-              <Button
-                onClick={handleSignin}
-                variant="outlined"
-                startIcon={<FacebookIcon color="primary" style={{ fontSize: 28 }} />}
-                color="default"
-                className={classes.button}
-              >
-                Sign in with Facebook
-              </Button>
-              <Button
-                onClick={handleSignin}
-                variant="outlined"
-                startIcon={
-                  <img
-                    width="20px"
-                    style={{ marginBottom: 3, marginRight: 5 }}
-                    alt="Google sign-in"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
-                  />
-                }
-                color="default"
-                className={classes.button}
-              >
-                Sign in with Google
-              </Button>
+              <FacebookLogin
+                appId="695868198030092"
+                autoLoad={false}
+                callback={responseFacebook}
+                fields="name,email"
+                render={(renderProps) => (
+                  <Button
+                    onClick={renderProps.onClick}
+                    variant="outlined"
+                    startIcon={<FacebookIcon color="primary" style={{ fontSize: 28 }} />}
+                    color="default"
+                    className={classes.button}
+                  >
+                    Sign in with Facebook
+                  </Button>
+                )}
+              />
+              <GoogleLogin
+                clientId="921119486812-2vc92c8q6m8j0a61ba9oh3rk7t2birhr.apps.googleusercontent.com"
+                render={(renderProps) => (
+                  <Button
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                    variant="outlined"
+                    startIcon={
+                      <img
+                        width="20px"
+                        style={{ marginBottom: 3, marginRight: 5 }}
+                        alt="Google sign-in"
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+                      />
+                    }
+                    color="default"
+                    className={classes.button}
+                  >
+                    Sign in with Google
+                  </Button>
+                )}
+                buttonText="Login"
+                onSuccess={responseGoogle}
+                cookiePolicy={"single_host_origin"}
+              />
               <Grid container justify="flex-end">
                 <Grid item>
                   <Link to="/signin" variant="body2">
